@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TeleCorp — Diagramas de Flujo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:       #0d1117;
+    --surface:  #161b22;
+    --surface2: #1c2128;
+    --border:   rgba(255,255,255,0.08);
+    --text:     #e6edf3;
+    --text2:    #8b949e;
+    --text3:    #484f58;
+    --accent:   #1f6feb;
+    --teal:     #0e9f8e;
+    --purple:   #7c3aed;
+    --coral:    #da3633;
+    --amber:    #d29922;
+    --green:    #238636;
+    --gray:     #30363d;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .logo { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+  .logo span { color: var(--accent); }
+  .logo-sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text3); letter-spacing: 0.1em; margin-top: 2px; }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    padding: 16px 28px 0;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 8px 16px;
+    border-radius: 8px 8px 0 0;
+    border: 1px solid transparent;
+    border-bottom: none;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text2);
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.15s;
+    position: relative;
+    bottom: -1px;
+  }
+  .tab:hover { color: var(--text); background: var(--surface2); }
+  .tab.on {
+    color: var(--text);
+    background: var(--surface2);
+    border-color: var(--border);
+    border-bottom-color: var(--surface2);
+  }
+
+  /* ── LAYOUT ── */
+  .layout { display: flex; height: calc(100vh - 113px); }
+  .diagram-col { flex: 1; min-width: 0; overflow: auto; padding: 24px 28px; }
+  .panel-col {
+    width: 320px;
+    flex-shrink: 0;
+    border-left: 1px solid var(--border);
+    overflow: auto;
+    transition: width 0.2s ease;
+    background: var(--surface);
+  }
+  .panel-col.closed { width: 0; border-left: none; overflow: hidden; }
+  .panel-inner { width: 320px; padding: 20px; }
+
+  /* ── PANEL DETAIL ── */
+  .panel-close {
+    float: right;
+    background: none;
+    border: none;
+    color: var(--text2);
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+  }
+  .panel-close:hover { color: var(--text); }
+  .panel-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .panel-sub { font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 16px; }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 14px 0 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .field-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 5px; font-size: 12.5px; color: var(--text2); line-height: 1.5; }
+  .field-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 5px; }
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px 3px 2px 0;
+    font-weight: 500;
+  }
+  .badge-db   { background: rgba(31,111,235,0.15); color: #58a6ff; border: 1px solid rgba(31,111,235,0.3); }
+  .badge-warn { background: rgba(210,153,34,0.15);  color: #e3b341; border: 1px solid rgba(210,153,34,0.3); }
+  .badge-ok   { background: rgba(35,134,54,0.15);   color: #3fb950; border: 1px solid rgba(35,134,54,0.3); }
+  .badge-err  { background: rgba(218,54,51,0.15);   color: #f85149; border: 1px solid rgba(218,54,51,0.3); }
+
+  /* ── SVG NODES ── */
+  .node { cursor: pointer; }
+  .node rect, .node path { transition: filter 0.15s; }
+  .node:hover rect, .node:hover path { filter: brightness(1.2); }
+  .node text { pointer-events: none; font-family: 'Inter', sans-serif; }
+  .th { font-weight: 600; fill: #e6edf3; font-size: 13px; }
+  .ts { fill: #8b949e; font-size: 10px; }
+  .arr { stroke: #484f58; fill: none; }
+
+  /* Colores nodos */
+  .c-gray   rect { fill: #30363d; stroke: #484f58; }
+  .c-purple rect { fill: #1a1040; stroke: #7c3aed; }
+  .c-blue   rect { fill: #0d1f40; stroke: #1f6feb; }
+  .c-teal   rect { fill: #0a1f1c; stroke: #0e9f8e; }
+  .c-coral  rect { fill: #2d0f0e; stroke: #da3633; }
+  .c-amber  rect { fill: #2d1f00; stroke: #d29922; }
+  .c-navy   rect { fill: #0d1117; stroke: #30363d; }
+  .c-green  rect { fill: #0d1f12; stroke: #238636; }
+
+  .node-label { fill: #8b949e; font-size: 9px; font-family: 'Inter',sans-serif; }
+
+  /* ── HINT ── */
+  .hint {
+    font-size: 11px;
+    color: var(--text3);
+    text-align: center;
+    padding: 8px 0 16px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  svg { display: block; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">Tele<span>Corp</span></div>
+    <div class="logo-sub">CENCOSUD · DIAGRAMAS DE FLUJO</div>
+  </div>
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="tab on" onclick="setFlow('ciclo',this)">Ciclo equipo</button>
+  <button class="tab" onclick="setFlow('login',this)">Login</button>
+  <button class="tab" onclick="setFlow('linea',this)">Alta línea</button>
+  <button class="tab" onclick="setFlow('gestion',this)">Nueva gestión</button>
+  <button class="tab" onclick="setFlow('bajas',this)">Procesar bajas</button>
+  <button class="tab" onclick="setFlow('devolucion',this)">Devolución</button>
+</div>
+
+<div class="layout">
+  <div class="diagram-col">
+    <div class="hint">Hacé clic en cualquier nodo para ver los detalles →</div>
+    <div id="svg-container"></div>
+  </div>
+  <div class="panel-col closed" id="panel-col">
+    <div class="panel-inner" id="panel-inner">
+      <button class="panel-close" onclick="closePanel()">✕</button>
+      <div class="panel-title" id="p-title"></div>
+      <div class="panel-sub" id="p-sub"></div>
+      <div id="p-body"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const NODES = {
+  'lista-precios':{title:'Lista de precios',sub:'Carga semanal de equipos disponibles para asignar',sections:[
+    {label:'Formato Excel',items:['Columnas requeridas: Equipo, Marca, Precio, Stock, Grupo','Grupo define la gama: A / B / C / D']},
+    {label:'Gamas por plan',items:['Plan A → solo Gama A','Plan B1 / B2 → Gama A + B','Plan C → Gama A + B + C','Plan D → Gama A + B + C + D']},
+    {label:'Base de datos',badges:[{t:'dbo.Precios TRUNCATE + INSERT',c:'db'}]},
+    {label:'Registro',items:['Se guarda fecha y hora de la última carga','Visible en el módulo Lista de precios']}
+  ]},
+  'gestion-alta':{title:'Gestión de alta',sub:'Primera gestión del equipo — asignación al empleado',sections:[
+    {label:'Tipos que inician el ciclo',items:['ALTA/LINEA','RECAMBIO/TECNOLÓGICO','REPOSICIÓN POR ROBO','REPOSICIÓN POR ROTURA']},
+    {label:'Estado inicial',badges:[{t:'Pedir teléfono',c:'warn'}]},
+    {label:'Campos clave',items:['Línea, Legajo, Nombre del titular','Equipo (modelo del dropdown por gama)','IMEI, Marca, N° SIM, Tipo SIM','CAU (número de ticket)','Costo, Autorizante, Zona']},
+    {label:'Base de datos',badges:[{t:'dbo.Gestiones INSERT',c:'db'},{t:'dbo.Lineas UPDATE equipo',c:'db'},{t:'dbo.Auditoria INSERT',c:'db'}]}
+  ]},
+  'despacho':{title:'Despacho',sub:'Envío físico del equipo al empleado',sections:[
+    {label:'Zonas',items:['AMBA: el empleado retira en la oficina central','Interior: se envía a domicilio o sucursal']},
+    {label:'Flujo de estados',items:['Pedir teléfono → Despachar → Despachado → Avisado → Entregado']},
+    {label:'Campos',items:['Número de remito','Fecha de retiro o despacho']},
+    {label:'Base de datos',badges:[{t:'dbo.Gestiones UPDATE EstadoEquipo',c:'db'},{t:'FechaRetiroDespacho',c:'db'},{t:'NumeroRemito',c:'db'}]}
+  ]},
+  'en-uso':{title:'Equipo en uso',sub:'Período de uso del equipo por el empleado',sections:[
+    {label:'Seguimiento',items:['El sistema calcula MesesUso desde FechaAlta','A los 18 meses: HabilitadoCambio = 1','La tabla de Líneas muestra habilitado para cambio']},
+    {label:'Visibilidad',items:['Dashboard KPI "Habilitadas cambio"','Columna Meses uso en tabla de Líneas']},
+    {label:'Campos en dbo.Lineas',badges:[{t:'MesesUso',c:'db'},{t:'HabilitadoCambio',c:'db'},{t:'FechaAlta',c:'db'}]}
+  ]},
+  'evento':{title:'Evento que cierra el ciclo',sub:'Tres caminos posibles según lo que ocurra',sections:[
+    {label:'Recambio tecnológico',items:['Nueva gestión tipo RECAMBIO/TECNOLÓGICO','El sistema pregunta si entregó el equipo anterior','Si no entregó → va a Pendientes de entrega']},
+    {label:'Baja del empleado',items:['CSV RRHH identifica el legajo','Por cada línea: dropdown de 3 opciones','Devuelve / Se lleva autorizado / Fue robado']},
+    {label:'Robo o Rotura',items:['Nueva gestión REPOS. ROBO o REPOS. ROTURA','El sistema cierra el equipo anterior automáticamente','Estado: Robado o Scrap según el caso']}
+  ]},
+  'csv-rrhh':{title:'Procesamiento CSV RRHH',sub:'Baja masiva de empleados con equipos asignados',sections:[
+    {label:'Formato',items:['Archivo CSV con columna "Legajo PS"','Cruza con dbo.Lineas para detectar líneas activas']},
+    {label:'Dropdown por equipo detectado',items:['Lo devuelve → crea registro en Pendientes entrega','Se lleva autorizado → sin registro adicional','Le fue robado / perdido → DEVOLUCION estado Robado']},
+    {label:'Al confirmar',items:['Líneas pasan a PENDIENTE_BAJA','Equipos robados: registro inmediato','Equipos a devolver: Pendientes entrega']},
+    {label:'Base de datos',badges:[{t:'dbo.Lineas UPDATE EstadoLinea',c:'db'},{t:'dbo.Gestiones INSERT',c:'db'}]}
+  ]},
+  'cierre-auto':{title:'Cierre automático de equipo',sub:'Se activa en Repos. Robo y Repos. Rotura',sections:[
+    {label:'Qué hace el sistema',items:['Busca el equipo actual en dbo.Lineas antes del UPDATE','Crea una DEVOLUCION del equipo viejo automáticamente','Estado: Robado (robo) o Scrap (rotura)','Incluye el CAU del ticket nuevo para trazabilidad']},
+    {label:'Base de datos',badges:[{t:'dbo.Gestiones INSERT automático',c:'db'},{t:'dbo.Auditoria INSERT',c:'db'}]},
+    {label:'El equipo nuevo',items:['Sigue el flujo normal desde Gestión de alta','Estado inicial: Pedir teléfono']}
+  ]},
+  'stock':{title:'Stock disponible',sub:'Equipos recuperados listos para reasignar',sections:[
+    {label:'Cómo llegan al stock',items:['Devolución con estado Buen estado','Devolución con estado Con daños']},
+    {label:'Qué NO va al stock',items:['Estado Robado → solo historial','Estado Scrap / Obsoleto → solo historial']},
+    {label:'Reasignación',items:['Botón Reasignar en cada fila','Modal: legajo + nombre (autocompleta Maestro)','Línea, tipo de gestión, autorizante, zona','Crea gestión nueva y saca del stock']},
+    {label:'Base de datos',badges:[{t:'dbo.Gestiones TipoGestion=DEVOLUCION',c:'db'}]}
+  ]},
+  'baja-def':{title:'Baja definitiva',sub:'El equipo sale del sistema sin posibilidad de reasignar',sections:[
+    {label:'Estados que generan baja definitiva',items:['Robado','Scrap','Obsoleto','Perdido']},
+    {label:'Qué sucede',items:['Registro en dbo.Gestiones como DEVOLUCION','No aparece en Stock disponible','No genera Pendiente de entrega']},
+    {label:'Base de datos',badges:[{t:'dbo.Gestiones INSERT',c:'db'},{t:'dbo.Auditoria INSERT',c:'db'}]}
+  ]},
+  'reasignar':{title:'Reasignar a nuevo usuario',sub:'El ciclo comienza de nuevo sin nueva compra',sections:[
+    {label:'Cómo funciona',items:['Botón Reasignar en la tabla de Stock','Legajo del nuevo usuario','Nombre se autocompleta desde dbo.Maestro','Número de línea y tipo de gestión']},
+    {label:'Resultado',items:['Nueva gestión en dbo.Gestiones','Equipo sale del stock','Estado inicial: Pedir teléfono','El ciclo se reinicia']},
+    {label:'Base de datos',badges:[{t:'dbo.Gestiones INSERT',c:'db'},{t:'Stock actualizado',c:'ok'}]}
+  ]},
+  'inicio':{title:'Inicio de sesión',sub:'Punto de entrada al sistema',sections:[
+    {label:'Cómo acceder',items:['URL: http://G100603NT427','Usuario y contraseña de red Cencosud']},
+    {label:'Flujo',items:['POST /api/login','Flask valida contra AD (cencosud.corp)','Verifica en dbo.Usuarios que esté habilitado','Crea sesión de 8 horas']}
+  ]},
+  'login-form':{title:'login.html',sub:'Página de ingreso al sistema',sections:[
+    {label:'Campos',items:['Usuario de red','Contraseña (enmascarada)']},
+    {label:'Comportamiento',items:['Enter en usuario → pasa a contraseña','Enter en contraseña → ejecuta login','Spinner mientras valida','Mensaje de error si las credenciales son incorrectas']}
+  ]},
+  'api-login':{title:'POST /api/login',sub:'Endpoint de autenticación en Flask',sections:[
+    {label:'Proceso',items:['Recibe {usuario, password} en JSON','Valida contra LDAP (cencosud.corp, puerto 636)','Verifica en dbo.Usuarios que esté activo','Asigna rol: admin o consulta']},
+    {label:'Respuesta exitosa',items:['{ok: true, rol, nombre}','Cookie de sesión (8 horas)','Redirige a /app']},
+    {label:'Base de datos',badges:[{t:'dbo.Usuarios SELECT',c:'db'}]}
+  ]},
+  'active-dir':{title:'Active Directory',sub:'Servidor LDAP corporativo para validación de identidad',sections:[
+    {label:'Dominio',items:['cencosud.corp · Puerto 636 (LDAPS)']},
+    {label:'Qué valida',items:['Usuario existe en el directorio','Contraseña correcta','Cuenta no bloqueada ni expirada']},
+    {label:'Importante',items:['Los permisos dentro de TeleCorp los maneja dbo.Usuarios','AD solo valida la identidad']}
+  ]},
+  'decision-usuario':{title:'Verificación en dbo.Usuarios',sub:'Segunda validación interna del sistema',sections:[
+    {label:'Qué verifica',items:['Legajo existe en dbo.Usuarios','Campo Activo = 1','Rol asignado: admin o consulta']},
+    {label:'Si NO existe',badges:[{t:'Error de acceso',c:'err'}],items:['No se crea sesión']},
+    {label:'Si SÍ existe',badges:[{t:'Sesión creada (8 horas)',c:'ok'}],items:['Cookie válida 8 horas','Redirige a /app con el Dashboard']}
+  ]},
+  'ingresar-legajo':{title:'Ingresar legajo',sub:'Primer paso del formulario de alta de línea',sections:[
+    {label:'Campos que autocompleta desde Maestro',items:['Nombre y apellido','Área / Empresa / CC RRHH','Ubicación y local (Descripcion del Maestro)','Marca del local (columna Bandera)']},
+    {label:'Base de datos',badges:[{t:'dbo.Maestro SELECT por Legajo',c:'db'}]}
+  ]},
+  'plan-zona':{title:'Plan y zona',sub:'Configuración del servicio de la línea',sections:[
+    {label:'Planes y datos',items:['Plan A → 1GB o 3GB (operador elige)','Plan B1 → 3GB (automático)','Plan B2 → 5GB (automático)','Plan C → 8GB (automático)','Plan D → 15GB (automático)']},
+    {label:'Zona',items:['AMBA: Área Metropolitana de Buenos Aires','Interior: resto del país']}
+  ]},
+  'tipo-usuario':{title:'Tipo de usuario',sub:'Define qué secciones se muestran en el formulario',sections:[
+    {label:'Titular',items:['Empleado con equipo y línea propios','Habilita sección de datos del equipo','Dropdown de modelo filtrado por gama del plan']},
+    {label:'Otros tipos',items:['Externo: solo nombre libre','Cámara / Alarma / Teléfono propio / Otro']}
+  ]},
+  'seccion-equipo':{title:'Sección equipo (Titular)',sub:'Datos del teléfono asignado al empleado',sections:[
+    {label:'Campos',items:['Modelo: dropdown filtrado por gamas del plan','Marca: se autocompleta al elegir modelo','IMEI: 15 dígitos — se valida duplicado','N° SIM: serie del chip físico','Tipo SIM: SIM física o eSIM']},
+    {label:'Dropdown de modelos',items:['GET /api/precios?grupos=A&grupos=B','Equipos agrupados por Gama con separador','Solo muestra Stock > 0']},
+    {label:'Base de datos',badges:[{t:'dbo.Precios SELECT por Grupo',c:'db'}]}
+  ]},
+  'validaciones-linea':{title:'Validaciones antes de guardar',sub:'El sistema verifica integridad de datos',sections:[
+    {label:'IMEI',items:['Verifica que no exista en otra línea ACTIVA','Alerta visual debajo del campo']},
+    {label:'SIM',items:['Verifica que el número de SIM no esté registrado']},
+    {label:'Base de datos',badges:[{t:'dbo.Lineas SELECT IMEI',c:'db'},{t:'dbo.Lineas SELECT SIM',c:'db'}]}
+  ]},
+  'guardar-linea':{title:'Guardar en dbo.Lineas',sub:'Persistencia del alta de línea',sections:[
+    {label:'Campos guardados',items:['Legajo, NumeroLinea, NombreApellido, Plan, Zona','Modelo, Marca, IMEI, SIM, TipoSIM','Area, Empresa, CC RRHH, Ubicacion','Datos (GB), Soporte, RoamingDDI','FechaAlta, EstadoLinea = ACTIVA']},
+    {label:'Base de datos',badges:[{t:'dbo.Lineas INSERT',c:'db'},{t:'dbo.Auditoria INSERT',c:'db'}]}
+  ]},
+  'ingresar-linea':{title:'Ingresar número de línea',sub:'Primer campo del formulario de nueva gestión',sections:[
+    {label:'Qué autocompleta',items:['Legajo del titular','Nombre y apellido','Plan actual','Equipo actual (Modelo, Marca, IMEI)','Zona y área']},
+    {label:'Base de datos',badges:[{t:'dbo.Lineas SELECT por NumeroLinea',c:'db'},{t:'JOIN dbo.Maestro',c:'db'}]}
+  ]},
+  'tipo-gestion':{title:'Tipo de gestión',sub:'Define el flujo y acciones automáticas',sections:[
+    {label:'Tipos disponibles',items:['ALTA/LINEA','RECAMBIO/TECNOLÓGICO','REPOSICIÓN POR ROBO → activa cierre automático','REPOSICIÓN POR ROTURA → activa cierre automático','BACK UP','DEVOLUCION','BAJA','OTRO']},
+    {label:'Estado inicial único',badges:[{t:'Pedir teléfono',c:'warn'}]}
+  ]},
+  'pregunta-anterior':{title:'¿Tiene equipo anterior?',sub:'Cierra el ciclo del equipo viejo al crear una gestión nueva',sections:[
+    {label:'Lógica',items:['El backend captura el equipo viejo ANTES del UPDATE','Lo devuelve en la respuesta del POST /api/pedidos']},
+    {label:'Si entregó el equipo',items:['Modal de devolución pre-completado con datos del viejo','Operador confirma el estado y registra']},
+    {label:'Si NO entregó',items:['Registro en Pendientes de entrega','Con modelo, marca, IMEI y CAU referenciado']},
+    {label:'Base de datos',badges:[{t:'dbo.Gestiones INSERT DEVOLUCION PENDIENTE',c:'db'}]}
+  ]},
+  'guardar-gestion':{title:'Guardar en dbo.Gestiones',sub:'Creación del registro de gestión',sections:[
+    {label:'Campos guardados',items:['CAU, Línea, Legajo, Usuario','Equipo, Marca, IMEI (nuevo)','TipoGestion, EstadoEquipo = Pedir teléfono','Costo, Autorizante, Zona, Observaciones','FechaPedido = fecha actual']},
+    {label:'Base de datos',badges:[{t:'dbo.Gestiones INSERT',c:'db'},{t:'dbo.Lineas UPDATE equipo',c:'db'},{t:'dbo.Auditoria INSERT',c:'db'}]}
+  ]},
+  'cargar-csv':{title:'Cargar CSV RRHH',sub:'Archivo con legajos de empleados dados de baja',sections:[
+    {label:'Formato',items:['Archivo .csv','Columna: "Legajo PS"','Una fila por empleado']},
+    {label:'Importante',items:['El CSV solo analiza — no modifica nada','Los cambios ocurren al confirmar "Marcar pendientes"']}
+  ]},
+  'cruzar-lineas':{title:'Cruzar con dbo.Lineas',sub:'El sistema busca líneas activas por cada legajo',sections:[
+    {label:'Qué hace',items:['Por cada legajo del CSV busca en dbo.Lineas','Filtra EstadoLinea = ACTIVA','Recupera: NumeroLinea, Modelo, Marca, IMEI, Plan']},
+    {label:'Resultado',items:['Grilla 1: empleados CON línea activa','Grilla 2: empleados SIN línea (informativo)']},
+    {label:'Base de datos',badges:[{t:'dbo.Lineas SELECT por Legajo',c:'db'},{t:'JOIN dbo.Maestro',c:'db'}]}
+  ]},
+  'dropdown-equipo':{title:'Dropdown por equipo',sub:'Decisión del operador para cada equipo detectado',sections:[
+    {label:'Opción 1 — Devuelve',badges:[{t:'→ Pendientes entrega',c:'warn'}],items:['INSERT en Gestiones con TipoGestion = DEVOLUCION PENDIENTE','Incluye: Línea, Legajo, Nombre, Modelo, Marca, IMEI']},
+    {label:'Opción 2 — Se lleva',badges:[{t:'Sin registro adicional',c:'ok'}],items:['No se genera ningún registro de devolución']},
+    {label:'Opción 3 — Robado',badges:[{t:'DEVOLUCION estado Robado',c:'err'}],items:['INSERT inmediato en Gestiones','EstadoEquipo = Robado','No pasa por Pendientes entrega']}
+  ]},
+  'marcar-pendientes':{title:'Marcar PENDIENTE_BAJA',sub:'Acción final que ejecuta los cambios en la base',sections:[
+    {label:'Qué ejecuta',items:['UPDATE dbo.Lineas SET EstadoLinea = PENDIENTE_BAJA','INSERT Gestiones para equipos que devuelven','INSERT Gestiones para equipos robados (Robado)']},
+    {label:'Confirmación previa',items:['Resumen: N líneas / N a Pendientes / N Robados / N sin decisión']},
+    {label:'Después',items:['Líneas en tab Pendientes bajas','Resolución individual: dar de baja, reasignar o aguardar']}
+  ]},
+  'formulario-dev':{title:'Formulario de devolución',sub:'Registro del equipo devuelto físicamente',sections:[
+    {label:'Campos',items:['Línea, Legajo, Nombre del ex-usuario','Modelo, Marca, IMEI (pre-cargados si viene de Pendientes)','Estado: Buen estado / Con daños / Scrap / Obsoleto / Robado','Subcategoría si es Scrap: Scrap o Obsoleto','Fecha de devolución · Observaciones']}
+  ]},
+  'estado-equipo':{title:'Decisión por estado del equipo',sub:'El estado determina el destino final',sections:[
+    {label:'Buen estado o Con daños',badges:[{t:'→ Stock disponible',c:'ok'}],items:['Listo para reasignar a otro empleado','Aparece en pestaña Stock disponible']},
+    {label:'Scrap o Obsoleto',badges:[{t:'→ Baja definitiva',c:'err'}],items:['No va al stock','Solo historial']},
+    {label:'Robado o Perdido',badges:[{t:'→ Baja definitiva',c:'err'}],items:['No va al stock','No genera Pendiente entrega']}
+  ]},
+  'guardar-dev':{title:'Guardar devolución',sub:'Persistencia y cierre del circuito',sections:[
+    {label:'Qué se guarda',items:['INSERT dbo.Gestiones TipoGestion = DEVOLUCION','EstadoEquipo = estado elegido por el operador']},
+    {label:'Si viene de Pendientes entrega',items:['UPDATE del registro DEVOLUCION PENDIENTE','SET EstadoEquipo = Entregado','El pendiente desaparece de la tab']},
+    {label:'Base de datos',badges:[{t:'dbo.Gestiones INSERT',c:'db'},{t:'dbo.Gestiones UPDATE pendiente',c:'db'},{t:'dbo.Auditoria INSERT',c:'db'}]}
+  ]}
+};
+
+const FLOWS = {
+  ciclo:{vb:'0 0 680 760',nodes:[
+    {id:'lista-precios',x:220,y:30,w:240,h:44,rx:22,cls:'c-gray',label:'Lista de precios',sub:''},
+    {id:'gestion-alta',x:190,y:130,w:300,h:44,rx:8,cls:'c-purple',label:'Gestión de alta',sub:'ALTA/LINEA · RECAMBIO/TEC.'},
+    {id:'despacho',x:190,y:230,w:300,h:44,rx:8,cls:'c-blue',label:'Despacho',sub:'AMBA retiro / Interior envío'},
+    {id:'en-uso',x:190,y:330,w:300,h:56,rx:8,cls:'c-teal',label:'Equipo en uso',sub:'Sistema cuenta meses (18m = habilitado)'},
+    {id:'evento',x:200,y:445,w:280,h:44,rx:22,cls:'c-amber',label:'¿Qué evento ocurre?',sub:''},
+    {id:'csv-rrhh',x:20,y:540,w:160,h:56,rx:8,cls:'c-coral',label:'Baja personal',sub:'CSV RRHH'},
+    {id:'cierre-auto',x:500,y:540,w:160,h:56,rx:8,cls:'c-gray',label:'Robo / Rotura',sub:'Cierre automático'},
+    {id:'stock',x:40,y:660,w:180,h:56,rx:8,cls:'c-teal',label:'Stock disponible',sub:'Buen estado / Con daños'},
+    {id:'baja-def',x:260,y:660,w:160,h:56,rx:8,cls:'c-coral',label:'Baja definitiva',sub:'Robado / Scrap'},
+    {id:'reasignar',x:460,y:660,w:180,h:56,rx:8,cls:'c-purple',label:'Reasignar',sub:'Sin nueva compra'},
+  ],arrows:[
+    [340,74,340,130],[340,174,340,230],[340,274,340,330],[340,386,340,445],
+    [200,467,100,540],[340,467,340,540],[480,467,580,540],
+    [100,596,130,660],[340,596,340,660],[580,596,550,660],
+    [550,716,510,716,510,760,130,760,130,716],
+  ],labels:[
+    {x:148,y:510,text:'Baja'},{x:345,y:510,text:'Recambio'},{x:512,y:510,text:'Robo'}
+  ]},
+  login:{vb:'0 0 680 560',nodes:[
+    {id:'inicio',x:230,y:30,w:220,h:44,rx:22,cls:'c-gray',label:'Inicio',sub:''},
+    {id:'login-form',x:190,y:130,w:300,h:56,rx:8,cls:'c-purple',label:'login.html',sub:'Usuario y contraseña de red'},
+    {id:'api-login',x:190,y:240,w:300,h:56,rx:8,cls:'c-purple',label:'POST /api/login',sub:'Flask valida credenciales'},
+    {id:'active-dir',x:190,y:350,w:300,h:56,rx:8,cls:'c-teal',label:'Active Directory (LDAP)',sub:'cencosud.corp'},
+    {id:'decision-usuario',x:170,y:458,w:340,h:44,rx:22,cls:'c-amber',label:'¿Usuario en dbo.Usuarios?',sub:''},
+  ],arrows:[[340,74,340,130],[340,186,340,240],[340,296,340,350],[340,406,340,458]],
+  labels:[]},
+  linea:{vb:'0 0 680 680',nodes:[
+    {id:'ingresar-legajo',x:160,y:30,w:360,h:56,rx:8,cls:'c-purple',label:'Ingresar legajo',sub:'Autocompleta desde dbo.Maestro'},
+    {id:'plan-zona',x:160,y:140,w:360,h:56,rx:8,cls:'c-purple',label:'Elegir plan y zona',sub:'Datos (GB) se autocompleta según plan'},
+    {id:'tipo-usuario',x:180,y:248,w:320,h:44,rx:22,cls:'c-amber',label:'¿Tipo de usuario?',sub:''},
+    {id:'seccion-equipo',x:20,y:348,w:200,h:56,rx:8,cls:'c-teal',label:'Sección equipo',sub:'Modelo · Marca · IMEI · SIM'},
+    {id:'tipo-usuario',x:460,y:348,w:200,h:56,rx:8,cls:'c-gray',label:'Nombre externo',sub:'Campo libre'},
+    {id:'validaciones-linea',x:240,y:348,w:200,h:56,rx:8,cls:'c-coral',label:'Validaciones',sub:'IMEI · SIM duplicados'},
+    {id:'guardar-linea',x:160,y:490,w:360,h:56,rx:8,cls:'c-navy',label:'Guardar en dbo.Lineas',sub:'+ registro en dbo.Auditoria'},
+  ],arrows:[
+    [340,86,340,140],[340,196,340,248],
+    [180,270,120,348],[340,270,340,348],[500,270,560,348],
+    [120,404,200,490],[340,404,340,490],[560,404,500,490]
+  ],labels:[{x:70,y:318,text:'Titular'},{x:495,y:318,text:'Externo'}]},
+  gestion:{vb:'0 0 680 700',nodes:[
+    {id:'ingresar-linea',x:130,y:30,w:420,h:56,rx:8,cls:'c-purple',label:'Ingresar número de línea',sub:'Autocompleta legajo · nombre · plan · equipo actual'},
+    {id:'tipo-gestion',x:130,y:140,w:420,h:56,rx:8,cls:'c-purple',label:'Elegir tipo de gestión',sub:'Alta · Recambio · Repos. robo · Repos. rotura · otros'},
+    {id:'cierre-auto',x:170,y:250,w:340,h:44,rx:22,cls:'c-amber',label:'¿Robo o Rotura?',sub:''},
+    {id:'cierre-auto',x:20,y:350,w:200,h:56,rx:8,cls:'c-coral',label:'Cierre automático',sub:'DEVOLUCION del equipo anterior'},
+    {id:'tipo-gestion',x:460,y:350,w:200,h:56,rx:8,cls:'c-gray',label:'Continúa normal',sub:'Sin cierre adicional'},
+    {id:'guardar-gestion',x:130,y:470,w:420,h:56,rx:8,cls:'c-teal',label:'Guardar en dbo.Gestiones',sub:'Estado: Pedir teléfono'},
+    {id:'pregunta-anterior',x:170,y:582,w:340,h:44,rx:22,cls:'c-amber',label:'¿Tiene equipo anterior?',sub:''},
+  ],arrows:[
+    [340,86,340,140],[340,196,340,250],
+    [170,272,120,350],[510,272,560,350],
+    [120,406,200,470],[560,406,500,470],
+    [340,526,340,582]
+  ],labels:[{x:62,y:316,text:'Sí'},{x:540,y:316,text:'No'}]},
+  bajas:{vb:'0 0 680 640',nodes:[
+    {id:'cargar-csv',x:170,y:30,w:340,h:44,rx:22,cls:'c-gray',label:'Cargar CSV RRHH',sub:''},
+    {id:'cruzar-lineas',x:130,y:130,w:420,h:56,rx:8,cls:'c-purple',label:'Cruzar con dbo.Lineas',sub:'Detecta líneas activas por legajo'},
+    {id:'cruzar-lineas',x:160,y:242,w:360,h:44,rx:22,cls:'c-amber',label:'¿Tiene línea activa?',sub:''},
+    {id:'dropdown-equipo',x:340,y:342,w:300,h:56,rx:8,cls:'c-purple',label:'Dropdown por equipo',sub:'Devuelve · Se lleva · Robado'},
+    {id:'marcar-pendientes',x:100,y:462,w:480,h:56,rx:8,cls:'c-navy',label:'Confirmar: marcar PENDIENTE_BAJA',sub:'+ registros de equipos según decisión'},
+  ],arrows:[
+    [340,74,340,130],[340,186,340,242],
+    [430,264,500,342],[500,398,430,462],[160,264,100,462]
+  ],labels:[{x:82,y:308,text:'Sin línea'},{x:450,y:308,text:'Con línea + equipo'}]},
+  devolucion:{vb:'0 0 680 660',nodes:[
+    {id:'formulario-dev',x:100,y:30,w:480,h:56,rx:8,cls:'c-purple',label:'Formulario de devolución',sub:'Línea · Legajo · Modelo · Marca · IMEI · Estado · Fecha'},
+    {id:'estado-equipo',x:150,y:140,w:380,h:44,rx:22,cls:'c-amber',label:'¿Estado del equipo?',sub:''},
+    {id:'stock',x:20,y:240,w:190,h:56,rx:8,cls:'c-teal',label:'Stock disponible',sub:'Buen estado / Con daños'},
+    {id:'baja-def',x:250,y:240,w:180,h:56,rx:8,cls:'c-gray',label:'Baja definitiva',sub:'Scrap / Obsoleto'},
+    {id:'baja-def',x:470,y:240,w:190,h:56,rx:8,cls:'c-coral',label:'Baja definitiva',sub:'Robado / Perdido'},
+    {id:'guardar-dev',x:100,y:380,w:480,h:56,rx:8,cls:'c-teal',label:'Guardar en dbo.Gestiones',sub:'TipoGestion: DEVOLUCION'},
+    {id:'guardar-dev',x:150,y:492,w:380,h:44,rx:22,cls:'c-amber',label:'¿Viene de Pendientes entrega?',sub:''},
+  ],arrows:[
+    [340,86,340,140],
+    [150,162,115,240],[340,162,340,240],[530,162,565,240],
+    [115,296,200,380],[340,296,340,380],[565,296,480,380],
+    [340,436,340,492]
+  ],labels:[{x:38,y:208,text:'Buen/daños'},{x:336,y:208,text:'Scrap'},{x:514,y:208,text:'Robado'}]}
+};
+
+function setFlow(id, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  btn.classList.add('on');
+  closePanel();
+  renderFlow(id);
+}
+
+function renderFlow(id) {
+  const f = FLOWS[id];
+  if (!f) return;
+  let svg = `<svg width="100%" viewBox="${f.vb}" role="img">
+<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="#484f58" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker></defs>`;
+
+  f.arrows.forEach(a => {
+    if (a.length === 4) {
+      svg += `<line x1="${a[0]}" y1="${a[1]}" x2="${a[2]}" y2="${a[3]}" class="arr" marker-end="url(#arr)" stroke-width="1"/>`;
+    } else {
+      let d = 'M';
+      for (let i = 0; i < a.length; i += 2) d += `${a[i]} ${a[i+1]}${i < a.length-2 ? 'L' : ''}`;
+      svg += `<path d="${d}" fill="none" class="arr" marker-end="url(#arr)" stroke-width="1"/>`;
+    }
+  });
+
+  (f.labels||[]).forEach(l => {
+    svg += `<text class="node-label" x="${l.x}" y="${l.y}" text-anchor="middle" dominant-baseline="central">${l.text}</text>`;
+  });
+
+  f.nodes.forEach(n => {
+    const cx = n.x + n.w/2, cy = n.y + n.h/2;
+    const hasData = !!NODES[n.id];
+    svg += `<g class="node ${n.cls}" onclick="${hasData ? `showPanel('${n.id}')` : ''}">
+  <rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="${n.rx}" stroke-width="1"/>
+  <text class="th" x="${cx}" y="${n.sub ? cy-8 : cy}" text-anchor="middle" dominant-baseline="central">${n.label}</text>
+  ${n.sub ? `<text class="ts" x="${cx}" y="${cy+10}" text-anchor="middle" dominant-baseline="central">${n.sub}</text>` : ''}
+</g>`;
+  });
+
+  svg += '</svg>';
+  document.getElementById('svg-container').innerHTML = svg;
+}
+
+function showPanel(id) {
+  const node = NODES[id];
+  if (!node) return;
+  document.getElementById('p-title').textContent = node.title;
+  document.getElementById('p-sub').textContent   = node.sub;
+  let html = '';
+  node.sections.forEach(sec => {
+    html += `<div class="section-label">${sec.label}</div>`;
+    if (sec.badges) {
+      sec.badges.forEach(b => {
+        const cls = {db:'badge-db',warn:'badge-warn',ok:'badge-ok',err:'badge-err'}[b.c]||'badge-db';
+        html += `<span class="badge ${cls}">${b.t}</span>`;
+      });
+      html += '<br style="margin-bottom:4px">';
+    }
+    if (sec.items) sec.items.forEach(item => {
+      html += `<div class="field-row"><div class="field-dot"></div><div>${item}</div></div>`;
+    });
+  });
+  document.getElementById('p-body').innerHTML = html;
+  document.getElementById('panel-col').classList.remove('closed');
+}
+
+function closePanel() {
+  document.getElementById('panel-col').classList.add('closed');
+}
+
+renderFlow('ciclo');
+</script>
+</body>
+</html>

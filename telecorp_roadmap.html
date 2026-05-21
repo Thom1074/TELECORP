@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TeleCorp — Roadmap Regional</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:      #0d1117;
+  --s1:      #161b22;
+  --s2:      #1c2128;
+  --border:  rgba(255,255,255,0.07);
+  --text:    #e6edf3;
+  --text2:   #8b949e;
+  --text3:   #484f58;
+  --blue:    #1f6feb;
+  --teal:    #0e9f8e;
+  --purple:  #7c3aed;
+  --coral:   #da3633;
+  --amber:   #d29922;
+  --green:   #238636;
+  --phase1:  #1f6feb;
+  --phase2:  #7c3aed;
+  --phase3:  #0e9f8e;
+  --phase4:  #d29922;
+}
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 40px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at 80% 50%, rgba(31,111,235,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.header-top { display: flex; align-items: flex-start; justify-content: space-between; }
+.logo { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; margin-bottom: 20px; }
+.logo span { color: var(--blue); }
+.logo-sub { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text3); letter-spacing: 0.1em; margin-top: 2px; }
+.h-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(31,111,235,0.3);
+  color: #58a6ff;
+  background: rgba(31,111,235,0.1);
+}
+.header h1 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+.header h1 em { font-style: normal; color: #58a6ff; }
+.header p { font-size: 14px; color: var(--text2); max-width: 600px; line-height: 1.6; margin-bottom: 24px; }
+
+/* PHASE PILLS */
+.phases { display: flex; gap: 8px; flex-wrap: wrap; }
+.phase-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all .15s;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+}
+.phase-pill:hover { opacity: 0.8; }
+.phase-pill.on { color: #fff !important; }
+.p1 { border-color: rgba(31,111,235,0.5); color: #58a6ff; }
+.p1.on { background: var(--phase1); border-color: var(--phase1); }
+.p2 { border-color: rgba(124,58,237,0.5); color: #a78bfa; }
+.p2.on { background: var(--phase2); border-color: var(--phase2); }
+.p3 { border-color: rgba(14,159,142,0.5); color: #34d399; }
+.p3.on { background: var(--phase3); border-color: var(--phase3); }
+.p4 { border-color: rgba(210,153,34,0.5); color: #e3b341; }
+.p4.on { background: var(--phase4); border-color: var(--phase4); }
+.p-all { border-color: rgba(255,255,255,0.15); color: var(--text2); }
+.p-all.on { background: var(--s2); border-color: rgba(255,255,255,0.3); color: var(--text); }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* MAIN LAYOUT */
+.main { display: flex; min-height: calc(100vh - 200px); }
+
+/* SIDEBAR NAV */
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+.nav-section { padding: 6px 20px 2px; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 12px; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px;
+  font-size: 12.5px;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .12s;
+  border-left: 2px solid transparent;
+  text-decoration: none;
+}
+.nav-item:hover { color: var(--text); background: var(--s2); }
+.nav-item.active { color: var(--text); border-left-color: var(--blue); background: rgba(31,111,235,0.06); }
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--s2);
+  color: var(--text3);
+}
+
+/* CONTENT */
+.content { flex: 1; min-width: 0; padding: 32px 40px; }
+
+/* PHASE HEADER */
+.phase-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding: 20px 24px;
+  border-radius: 12px;
+  border: 1px solid;
+}
+.ph-num {
+  font-size: 32px;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1;
+  flex-shrink: 0;
+  opacity: 0.4;
+}
+.ph-info { flex: 1; }
+.ph-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  opacity: 0.7;
+}
+.ph-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.ph-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.ph-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* CARDS GRID */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all .15s;
+  position: relative;
+}
+.card:hover { border-color: rgba(255,255,255,0.15); background: var(--s2); transform: translateY(-1px); }
+.card.expanded { border-color: rgba(255,255,255,0.2); }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.card-icon { font-size: 20px; flex-shrink: 0; }
+.card-priority {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.card-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.card-desc { font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 12px; }
+.card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--s2);
+  color: var(--text3);
+  border: 1px solid var(--border);
+}
+
+/* EXPAND AREA */
+.card-expand {
+  display: none;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.card.expanded .card-expand { display: block; }
+.expand-section { margin-bottom: 12px; }
+.expand-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.expand-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text2); line-height: 1.5; margin-bottom: 4px; }
+.expand-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--text3); flex-shrink: 0; margin-top: 6px; }
+.code-block {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #58a6ff;
+  margin-top: 8px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+.chevron { transition: transform .2s; display: inline-block; color: var(--text3); font-size: 12px; }
+.card.expanded .chevron { transform: rotate(180deg); }
+
+/* DIVIDER */
+.phase-divider { height: 1px; background: var(--border); margin: 40px 0; }
+
+/* STATUS STRIP */
+.status-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.stat-box {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.stat-num { font-size: 28px; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-bottom: 2px; }
+.stat-label { font-size: 11px; color: var(--text2); }
+
+/* TIMELINE */
+.timeline { display: flex; gap: 0; margin-bottom: 40px; }
+.tl-phase {
+  flex: 1;
+  padding: 12px 0;
+  text-align: center;
+  border-top: 3px solid;
+  position: relative;
+  font-size: 11px;
+  font-weight: 500;
+}
+.tl-phase::before {
+  content: '';
+  position: absolute;
+  top: -7px; left: 0;
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  border: 2px solid;
+  background: var(--bg);
+  border-color: inherit;
+}
+.tl-time { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text3); margin-top: 2px; }
+.t1 { border-color: var(--phase1); color: #58a6ff; }
+.t2 { border-color: var(--phase2); color: #a78bfa; }
+.t3 { border-color: var(--phase3); color: #34d399; }
+.t4 { border-color: var(--phase4); color: #e3b341; }
+
+/* HIDDEN */
+.phase-block { }
+.phase-block.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="logo">Tele<span>Corp</span><br><span class="logo-sub">CENCOSUD · TELEFONÍA REGIONAL</span></div>
+    </div>
+    <div class="h-tag">ROADMAP v1.0</div>
+  </div>
+  <h1>De herramienta interna<br>a plataforma <em>regional corporativa</em></h1>
+  <p>Plan de transformación para escalar TeleCorp a 5+ países con estándares de producción enterprise. Cada fase construye sobre la anterior — no son opcionales, son secuenciales.</p>
+  <div class="phases">
+    <button class="phase-pill p-all on" onclick="filterPhase('all',this)"><span class="dot" style="background:#8b949e"></span>Todo el roadmap</button>
+    <button class="phase-pill p1" onclick="filterPhase('1',this)"><span class="dot" style="background:var(--phase1)"></span>Fase 1 — Fundación</button>
+    <button class="phase-pill p2" onclick="filterPhase('2',this)"><span class="dot" style="background:var(--phase2)"></span>Fase 2 — Multi-país</button>
+    <button class="phase-pill p3" onclick="filterPhase('3',this)"><span class="dot" style="background:var(--phase3)"></span>Fase 3 — Operaciones</button>
+    <button class="phase-pill p4" onclick="filterPhase('4',this)"><span class="dot" style="background:var(--phase4)"></span>Fase 4 — Escala</button>
+  </div>
+</div>
+
+<div class="main">
+<nav class="sidebar">
+  <div class="nav-section">Estado actual</div>
+  <a class="nav-item" onclick="scrollTo('diagnostico')"><span class="nav-dot" style="background:#da3633"></span>Diagnóstico<span class="nav-badge">HOY</span></a>
+  <div class="nav-section">Fases del roadmap</div>
+  <a class="nav-item active" onclick="scrollTo('fase1')"><span class="nav-dot" style="background:var(--phase1)"></span>Fase 1 — Fundación<span class="nav-badge">0-3m</span></a>
+  <a class="nav-item" onclick="scrollTo('fase2')"><span class="nav-dot" style="background:var(--phase2)"></span>Fase 2 — Multi-país<span class="nav-badge">3-6m</span></a>
+  <a class="nav-item" onclick="scrollTo('fase3')"><span class="nav-dot" style="background:var(--phase3)"></span>Fase 3 — Operaciones<span class="nav-badge">6-9m</span></a>
+  <a class="nav-item" onclick="scrollTo('fase4')"><span class="nav-dot" style="background:var(--phase4)"></span>Fase 4 — Escala<span class="nav-badge">9-12m</span></a>
+  <div class="nav-section">Equipo necesario</div>
+  <a class="nav-item" onclick="scrollTo('equipo')"><span class="nav-dot" style="background:#8b949e"></span>Roles y responsabilidades</a>
+</nav>
+
+<div class="content">
+
+  <!-- DIAGNÓSTICO -->
+  <div id="diagnostico" class="phase-block">
+    <div class="phase-header" style="border-color:rgba(218,54,51,0.3);background:rgba(218,54,51,0.05);">
+      <div class="ph-num" style="color:var(--coral)">!</div>
+      <div class="ph-info">
+        <div class="ph-label" style="color:var(--coral)">Estado actual</div>
+        <div class="ph-title">Dónde estamos hoy</div>
+        <div class="ph-desc">TeleCorp es un sistema funcional para uso local en Argentina. El stack es sólido, pero la arquitectura y la infraestructura actuales no soportan expansión regional sin cambios fundamentales.</div>
+      </div>
+    </div>
+
+    <div class="status-strip">
+      <div class="stat-box"><div class="stat-num" style="color:var(--green)">✓</div><div class="stat-label">Stack técnico probado en producción</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--green)">✓</div><div class="stat-label">Autenticación real contra Active Directory</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--coral)">✗</div><div class="stat-label">Sin HTTPS — credenciales viajan sin cifrar</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--coral)">✗</div><div class="stat-label">Servidor = PC de escritorio. Si se apaga, cae</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--coral)">✗</div><div class="stat-label">Sin separación por país en la base de datos</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--coral)">✗</div><div class="stat-label">Rutas hardcodeadas a un usuario de Windows</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--amber)">~</div><div class="stat-label">Sin versionado del código (no hay Git)</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--amber)">~</div><div class="stat-label">Sin monitoreo ni alertas de caída</div></div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-phase t1">Fase 1 — Fundación<div class="tl-time">Meses 1-3</div></div>
+      <div class="tl-phase t2">Fase 2 — Multi-país<div class="tl-time">Meses 3-6</div></div>
+      <div class="tl-phase t3">Fase 3 — Operaciones<div class="tl-time">Meses 6-9</div></div>
+      <div class="tl-phase t4">Fase 4 — Escala<div class="tl-time">Meses 9-12</div></div>
+    </div>
+  </div>
+
+  <div class="phase-divider"></div>
+
+  <!-- FASE 1 -->
+  <div id="fase1" class="phase-block" data-phase="1">
+    <div class="phase-header" style="border-color:rgba(31,111,235,0.3);background:rgba(31,111,235,0.05);">
+      <div class="ph-num" style="color:var(--phase1)">01</div>
+      <div class="ph-info">
+        <div class="ph-label" style="color:#58a6ff">Fase 1 · Meses 1-3</div>
+        <div class="ph-title">Fundación — Lo que bloquea la expansión</div>
+        <div class="ph-desc">Sin estas bases, cualquier expansión regional va a colapsar. Son los cambios no negociables que hay que hacer antes de sumar un solo país nuevo.</div>
+      </div>
+      <div class="ph-time" style="background:rgba(31,111,235,0.15);color:#58a6ff;border:1px solid rgba(31,111,235,0.3)">⚡ Crítico</div>
+    </div>
+
+    <div class="cards">
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">🔒</div>
+          <div class="card-priority" style="background:rgba(218,54,51,0.15);color:#f85149">BLOQUEANTE</div>
+        </div>
+        <div class="card-title">HTTPS obligatorio <span class="chevron">▾</span></div>
+        <div class="card-desc">Hoy las contraseñas de red de Cencosud viajan en texto plano por la red. Cualquier persona en la misma red puede capturarlas con Wireshark en segundos.</div>
+        <div class="card-tags"><span class="tag">seguridad</span><span class="tag">nginx</span><span class="tag">certificado</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Qué hay que hacer</div>
+            <div class="expand-item"><div class="expand-dot"></div>Generar certificado SSL (certificado corporativo de Cencosud IT o Let's Encrypt si tiene salida a internet)</div>
+            <div class="expand-item"><div class="expand-dot"></div>Configurar NGINX para escuchar en puerto 443 y redirigir HTTP → HTTPS automáticamente</div>
+            <div class="expand-item"><div class="expand-dot"></div>Actualizar todas las URLs internas del sistema de http:// a https://</div>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Configuración NGINX mínima</div>
+            <div class="code-block">server {
+    listen 443 ssl;
+    ssl_certificate     /etc/ssl/telecorp.crt;
+    ssl_certificate_key /etc/ssl/telecorp.key;
+    # resto de la config existente
+}
+server {
+    listen 80;
+    return 301 https://$host$request_uri;
+}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">🖥️</div>
+          <div class="card-priority" style="background:rgba(218,54,51,0.15);color:#f85149">BLOQUEANTE</div>
+        </div>
+        <div class="card-title">Servidor dedicado o cloud <span class="chevron">▾</span></div>
+        <div class="card-desc">El sistema corre en la PC de escritorio de tasalina. Si esa PC se reinicia, se apaga o tiene un problema, el sistema cae para todos los países.</div>
+        <div class="card-tags"><span class="tag">infraestructura</span><span class="tag">azure</span><span class="tag">aws</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Opciones recomendadas</div>
+            <div class="expand-item"><div class="expand-dot"></div><strong>Azure VM (recomendado para Cencosud):</strong> Cencosud ya tiene contratos con Microsoft. Pedir una VM Windows Server con SQL Server en el tenant corporativo.</div>
+            <div class="expand-item"><div class="expand-dot"></div><strong>Servidor físico en datacenter Cencosud:</strong> Si IT tiene datacenter propio, pedir un servidor dedicado con Windows Server 2022.</div>
+            <div class="expand-item"><div class="expand-dot"></div>Mínimo recomendado: 4 vCPU, 8GB RAM, 100GB SSD, acceso por dominio interno.</div>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Qué cambia en el código</div>
+            <div class="expand-item"><div class="expand-dot"></div>Eliminar rutas hardcodeadas: C:\Users\tasalina\Desktop\... → variables de entorno</div>
+            <div class="expand-item"><div class="expand-dot"></div>El .bat de mantenimiento se configura como Tarea Programada del sistema, no del usuario</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">📁</div>
+          <div class="card-priority" style="background:rgba(218,54,51,0.15);color:#f85149">BLOQUEANTE</div>
+        </div>
+        <div class="card-title">Control de versiones con Git <span class="chevron">▾</span></div>
+        <div class="card-desc">El código vive en un desktop. No hay historial de cambios, no se puede trabajar en equipo sin pisarse, y si se borra el archivo no hay forma de recuperarlo.</div>
+        <div class="card-tags"><span class="tag">git</span><span class="tag">azure devops</span><span class="tag">github</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Qué hacer</div>
+            <div class="expand-item"><div class="expand-dot"></div>Crear repositorio en Azure DevOps (disponible en el tenant Cencosud) o GitHub Enterprise</div>
+            <div class="expand-item"><div class="expand-dot"></div>Subir app.py, index.html, login.html y archivos de configuración</div>
+            <div class="expand-item"><div class="expand-dot"></div>Agregar archivo .gitignore para no subir contraseñas ni archivos de base de datos</div>
+            <div class="expand-item"><div class="expand-dot"></div>Regla de trabajo: cada cambio va a una rama, se revisa, se aprueba, y recién ahí se sube a producción</div>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">.gitignore mínimo</div>
+            <div class="code-block">config.py          # credenciales DB
+*.pyc
+__pycache__/
+.env
+logs/
+*.log</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">⚙️</div>
+          <div class="card-priority" style="background:rgba(210,153,34,0.15);color:#e3b341">IMPORTANTE</div>
+        </div>
+        <div class="card-title">Variables de entorno <span class="chevron">▾</span></div>
+        <div class="card-desc">Las credenciales de la base de datos y la configuración están escritas directamente en el código. Eso es un riesgo de seguridad y hace imposible tener ambientes distintos (dev, test, producción).</div>
+        <div class="card-tags"><span class="tag">seguridad</span><span class="tag">config</span><span class="tag">python</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Crear archivo .env</div>
+            <div class="code-block">DB_SERVER=servidor.cencosud.corp
+DB_NAME=TeleCorp
+DB_USER=telecorp_app
+DB_PASS=contraseña_segura
+SECRET_KEY=clave_aleatoria_larga
+LDAP_SERVER=cencosud.corp
+APP_ENV=production</div>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">En app.py</div>
+            <div class="code-block">from dotenv import load_dotenv
+import os
+load_dotenv()
+
+DB_SERVER = os.getenv('DB_SERVER')
+SECRET_KEY = os.getenv('SECRET_KEY')</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">💾</div>
+          <div class="card-priority" style="background:rgba(210,153,34,0.15);color:#e3b341">IMPORTANTE</div>
+        </div>
+        <div class="card-title">Backup automático de la base de datos <span class="chevron">▾</span></div>
+        <div class="card-desc">Hoy no hay backup automatizado. Un error en la base o un problema en el servidor implica pérdida total de datos históricos de gestiones, líneas y auditoría.</div>
+        <div class="card-tags"><span class="tag">sql server</span><span class="tag">backup</span><span class="tag">automatización</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Estrategia recomendada</div>
+            <div class="expand-item"><div class="expand-dot"></div>Backup completo diario a las 02:00hs (SQL Server Agent Job)</div>
+            <div class="expand-item"><div class="expand-dot"></div>Backup diferencial cada 6 horas</div>
+            <div class="expand-item"><div class="expand-dot"></div>Retención: 30 días locales + 90 días en Azure Blob Storage</div>
+            <div class="expand-item"><div class="expand-dot"></div>Alerta por email si el backup falla</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">🔐</div>
+          <div class="card-priority" style="background:rgba(210,153,34,0.15);color:#e3b341">IMPORTANTE</div>
+        </div>
+        <div class="card-title">Rate limiting y protección del login <span class="chevron">▾</span></div>
+        <div class="card-desc">El endpoint /api/login no tiene límite de intentos. Se puede atacar con fuerza bruta para adivinar contraseñas de red Cencosud.</div>
+        <div class="card-tags"><span class="tag">seguridad</span><span class="tag">flask</span><span class="tag">nginx</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Solución</div>
+            <div class="code-block">pip install flask-limiter
+
+from flask_limiter import Limiter
+limiter = Limiter(app, default_limits=["200/day"])
+
+@app.route('/api/login', methods=['POST'])
+@limiter.limit("10/minute")  # 10 intentos por minuto
+def login():
+    ...</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="phase-divider"></div>
+
+  <!-- FASE 2 -->
+  <div id="fase2" class="phase-block" data-phase="2">
+    <div class="phase-header" style="border-color:rgba(124,58,237,0.3);background:rgba(124,58,237,0.05);">
+      <div class="ph-num" style="color:var(--phase2)">02</div>
+      <div class="ph-info">
+        <div class="ph-label" style="color:#a78bfa">Fase 2 · Meses 3-6</div>
+        <div class="ph-title">Multi-país — Arquitectura para 5 países</div>
+        <div class="ph-desc">Con la Fase 1 resuelta, ahora hay que rediseñar la base de datos y los permisos para soportar Argentina, Chile, Brasil, Perú y Colombia de forma aislada y segura.</div>
+      </div>
+      <div class="ph-time" style="background:rgba(124,58,237,0.15);color:#a78bfa;border:1px solid rgba(124,58,237,0.3)">🌎 Core</div>
+    </div>
+
+    <div class="cards">
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">🗄️</div>
+          <div class="card-priority" style="background:rgba(218,54,51,0.15);color:#f85149">BLOQUEANTE</div>
+        </div>
+        <div class="card-title">Columna País en todas las tablas <span class="chevron">▾</span></div>
+        <div class="card-desc">Agregar una columna Pais a dbo.Lineas, dbo.Gestiones, dbo.Maestro y dbo.Precios. Es el cambio más importante de toda la Fase 2 — todo lo demás depende de esto.</div>
+        <div class="card-tags"><span class="tag">sql server</span><span class="tag">migración</span><span class="tag">schema</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Script de migración</div>
+            <div class="code-block">ALTER TABLE dbo.Lineas    ADD Pais NVARCHAR(3) DEFAULT 'ARG';
+ALTER TABLE dbo.Gestiones ADD Pais NVARCHAR(3) DEFAULT 'ARG';
+ALTER TABLE dbo.Maestro   ADD Pais NVARCHAR(3) DEFAULT 'ARG';
+ALTER TABLE dbo.Precios   ADD Pais NVARCHAR(3) DEFAULT 'ARG';
+ALTER TABLE dbo.Usuarios  ADD Pais NVARCHAR(3) NULL; -- NULL = acceso global
+
+-- Actualizar registros existentes
+UPDATE dbo.Lineas    SET Pais = 'ARG';
+UPDATE dbo.Gestiones SET Pais = 'ARG';
+UPDATE dbo.Maestro   SET Pais = 'ARG';
+UPDATE dbo.Precios   SET Pais = 'ARG';</div>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Códigos de país</div>
+            <div class="expand-item"><div class="expand-dot"></div>ARG — Argentina</div>
+            <div class="expand-item"><div class="expand-dot"></div>CHL — Chile</div>
+            <div class="expand-item"><div class="expand-dot"></div>BRA — Brasil</div>
+            <div class="expand-item"><div class="expand-dot"></div>PER — Perú</div>
+            <div class="expand-item"><div class="expand-dot"></div>COL — Colombia</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">👤</div>
+          <div class="card-priority" style="background:rgba(218,54,51,0.15);color:#f85149">BLOQUEANTE</div>
+        </div>
+        <div class="card-title">Permisos por país en los roles <span class="chevron">▾</span></div>
+        <div class="card-desc">Un admin de Argentina no puede ver ni modificar datos de Chile. Cada usuario debe tener un país asignado, y todas las queries del backend deben filtrar por ese país automáticamente.</div>
+        <div class="card-tags"><span class="tag">roles</span><span class="tag">seguridad</span><span class="tag">flask</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Nuevos roles</div>
+            <div class="expand-item"><div class="expand-dot"></div><strong>superadmin:</strong> ve todos los países, acceso total (solo 1-2 personas)</div>
+            <div class="expand-item"><div class="expand-dot"></div><strong>admin_pais:</strong> admin de un país específico (ej: admin_ARG)</div>
+            <div class="expand-item"><div class="expand-dot"></div><strong>consulta_pais:</strong> solo lectura del país asignado</div>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">En app.py — filtro automático por país</div>
+            <div class="code-block">def get_pais_usuario():
+    pais = session.get('pais')
+    return None if pais == 'GLOBAL' else pais
+
+# En cada query:
+pais = get_pais_usuario()
+if pais:
+    where.append("L.Pais = ?")
+    params.append(pais)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">🌐</div>
+          <div class="card-priority" style="background:rgba(210,153,34,0.15);color:#e3b341">IMPORTANTE</div>
+        </div>
+        <div class="card-title">Selector de país en la interfaz <span class="chevron">▾</span></div>
+        <div class="card-desc">Para usuarios con acceso a múltiples países (superadmin, gerentes regionales), agregar un selector de país en el header que filtre toda la vista en tiempo real.</div>
+        <div class="card-tags"><span class="tag">ui/ux</span><span class="tag">frontend</span><span class="tag">filtros</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Comportamiento esperado</div>
+            <div class="expand-item"><div class="expand-dot"></div>Si el usuario tiene un solo país asignado: no ve el selector</div>
+            <div class="expand-item"><div class="expand-dot"></div>Si tiene acceso a múltiples países: ve un dropdown en el header con las banderas</div>
+            <div class="expand-item"><div class="expand-dot"></div>Al cambiar el país: todos los módulos (Dashboard, Líneas, Gestiones) filtran automáticamente</div>
+            <div class="expand-item"><div class="expand-dot"></div>La selección queda en la sesión del usuario</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">🇧🇷</div>
+          <div class="card-priority" style="background:rgba(210,153,34,0.15);color:#e3b341">IMPORTANTE</div>
+        </div>
+        <div class="card-title">Multi-idioma (i18n) <span class="chevron">▾</span></div>
+        <div class="card-desc">Para Brasil se necesita portugués. Para el resto de los países el español neutro actual es suficiente. Hay que externalizar todos los textos de la interfaz a archivos de traducción.</div>
+        <div class="card-tags"><span class="tag">i18n</span><span class="tag">frontend</span><span class="tag">pt-BR</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Enfoque recomendado</div>
+            <div class="expand-item"><div class="expand-dot"></div>Crear archivos JSON de traducciones: es.json (español) y pt.json (portugués)</div>
+            <div class="expand-item"><div class="expand-dot"></div>El idioma se asigna automáticamente según el país del usuario (BRA → pt, resto → es)</div>
+            <div class="expand-item"><div class="expand-dot"></div>En el HTML, reemplazar textos hardcodeados por claves: data-i18n="lineas.alta.titulo"</div>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Ejemplo es.json / pt.json</div>
+            <div class="code-block">// es.json
+{ "nueva_gestion": "Nueva gestión",
+  "lineas": "Líneas" }
+
+// pt.json
+{ "nueva_gestion": "Nova gestão",
+  "lineas": "Linhas" }</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">📋</div>
+          <div class="card-priority" style="background:rgba(14,159,142,0.15);color:#34d399">MEJORA</div>
+        </div>
+        <div class="card-title">Planes y precios por país <span class="chevron">▾</span></div>
+        <div class="card-desc">Cada país tiene sus propios planes, operadores y precios de equipos. La lista de precios y los planes disponibles deben filtrarse por país.</div>
+        <div class="card-tags"><span class="tag">precios</span><span class="tag">planes</span><span class="tag">configuración</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Cambios necesarios</div>
+            <div class="expand-item"><div class="expand-dot"></div>dbo.Precios ya tiene columna Pais después de la migración</div>
+            <div class="expand-item"><div class="expand-dot"></div>Crear tabla dbo.Planes con columnas: Pais, NombrePlan, DatosGB, Operador</div>
+            <div class="expand-item"><div class="expand-dot"></div>El dropdown de planes en nueva línea se filtra por Pais del usuario</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="phase-divider"></div>
+
+  <!-- FASE 3 -->
+  <div id="fase3" class="phase-block" data-phase="3">
+    <div class="phase-header" style="border-color:rgba(14,159,142,0.3);background:rgba(14,159,142,0.05);">
+      <div class="ph-num" style="color:var(--phase3)">03</div>
+      <div class="ph-info">
+        <div class="ph-label" style="color:#34d399">Fase 3 · Meses 6-9</div>
+        <div class="ph-title">Operaciones — Visibilidad y confiabilidad</div>
+        <div class="ph-desc">El sistema ya corre en múltiples países. Ahora hay que saber qué está pasando en tiempo real, detectar errores antes de que los usuarios los reporten, y garantizar disponibilidad.</div>
+      </div>
+      <div class="ph-time" style="background:rgba(14,159,142,0.15);color:#34d399;border:1px solid rgba(14,159,142,0.3)">📊 Madurez</div>
+    </div>
+
+    <div class="cards">
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">🚨</div>
+          <div class="card-priority" style="background:rgba(218,54,51,0.15);color:#f85149">CRÍTICO</div>
+        </div>
+        <div class="card-title">Monitoreo y alertas <span class="chevron">▾</span></div>
+        <div class="card-desc">Hoy si el sistema cae, la primera persona en enterarse es un usuario que intenta acceder y no puede. Para producción regional necesitás saberlo antes que nadie.</div>
+        <div class="card-tags"><span class="tag">monitoreo</span><span class="tag">alertas</span><span class="tag">uptime</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Herramientas recomendadas</div>
+            <div class="expand-item"><div class="expand-dot"></div><strong>UptimeRobot (gratis):</strong> ping cada 5 minutos, alerta por email o Teams si cae</div>
+            <div class="expand-item"><div class="expand-dot"></div><strong>Azure Monitor (ya incluido en Azure):</strong> métricas de CPU, memoria y errores HTTP</div>
+            <div class="expand-item"><div class="expand-dot"></div><strong>Sentry (gratis hasta 5k errores/mes):</strong> captura errores de Python en tiempo real con stack trace completo</div>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Integrar Sentry en app.py</div>
+            <div class="code-block">import sentry_sdk
+sentry_sdk.init(dsn="tu-dsn-de-sentry")
+# A partir de aquí todos los errores no manejados
+# se reportan automáticamente con contexto completo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">🧪</div>
+          <div class="card-priority" style="background:rgba(218,54,51,0.15);color:#f85149">CRÍTICO</div>
+        </div>
+        <div class="card-title">Tests automatizados de los endpoints críticos <span class="chevron">▾</span></div>
+        <div class="card-desc">Hoy cualquier cambio en app.py puede romper el login, el alta de líneas o el procesamiento de bajas sin que nadie lo note hasta que un usuario falla. Los tests previenen eso.</div>
+        <div class="card-tags"><span class="tag">pytest</span><span class="tag">testing</span><span class="tag">ci/cd</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Endpoints a testear primero</div>
+            <div class="expand-item"><div class="expand-dot"></div>POST /api/login — credenciales correctas, incorrectas, usuario inactivo</div>
+            <div class="expand-item"><div class="expand-dot"></div>GET /api/lineas — responde, filtra por país, requiere login</div>
+            <div class="expand-item"><div class="expand-dot"></div>POST /api/pedidos — crea gestión, valida campos requeridos</div>
+            <div class="expand-item"><div class="expand-dot"></div>GET /api/dashboard — devuelve KPIs correctos</div>
+          </div>
+          <div class="expand-section">
+            <div class="expand-label">Ejemplo con pytest</div>
+            <div class="code-block">def test_login_exitoso(client):
+    r = client.post('/api/login',
+        json={'usuario': 'test', 'password': 'pass'})
+    assert r.status_code == 200
+    assert r.json['ok'] == True
+
+def test_lineas_requiere_login(client):
+    r = client.get('/api/lineas')
+    assert r.status_code == 401</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">🔄</div>
+          <div class="card-priority" style="background:rgba(210,153,34,0.15);color:#e3b341">IMPORTANTE</div>
+        </div>
+        <div class="card-title">Pipeline de deploy automatizado (CI/CD) <span class="chevron">▾</span></div>
+        <div class="card-desc">Hoy para subir un cambio hay que copiar archivos manualmente al servidor. Con CI/CD, cada cambio aprobado en Git se despliega solo, con tests previos y rollback automático si algo falla.</div>
+        <div class="card-tags"><span class="tag">azure devops</span><span class="tag">github actions</span><span class="tag">deploy</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Flujo de deploy</div>
+            <div class="expand-item"><div class="expand-dot"></div>Developer sube cambio a rama feature/</div>
+            <div class="expand-item"><div class="expand-dot"></div>Se crea Pull Request — revisor lo aprueba</div>
+            <div class="expand-item"><div class="expand-dot"></div>Al mergear a main: el pipeline corre los tests</div>
+            <div class="expand-item"><div class="expand-dot"></div>Si los tests pasan: deploy automático al servidor</div>
+            <div class="expand-item"><div class="expand-dot"></div>Si algo falla: rollback al commit anterior automáticamente</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">📈</div>
+          <div class="card-priority" style="background:rgba(210,153,34,0.15);color:#e3b341">IMPORTANTE</div>
+        </div>
+        <div class="card-title">Dashboard regional para gerencia <span class="chevron">▾</span></div>
+        <div class="card-desc">Los gerentes regionales necesitan ver el estado de todos los países de un vistazo: KPIs consolidados, comparativa entre países, tendencias de gestiones y stock.</div>
+        <div class="card-tags"><span class="tag">dashboard</span><span class="tag">reportes</span><span class="tag">regional</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Métricas clave por país</div>
+            <div class="expand-item"><div class="expand-dot"></div>Total líneas activas por país</div>
+            <div class="expand-item"><div class="expand-dot"></div>Gestiones del mes vs mes anterior</div>
+            <div class="expand-item"><div class="expand-dot"></div>Equipos en stock y pendientes de entrega</div>
+            <div class="expand-item"><div class="expand-dot"></div>Tiempo promedio de resolución de gestiones</div>
+            <div class="expand-item"><div class="expand-dot"></div>Usuarios con línea habilitada para cambio</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="phase-divider"></div>
+
+  <!-- FASE 4 -->
+  <div id="fase4" class="phase-block" data-phase="4">
+    <div class="phase-header" style="border-color:rgba(210,153,34,0.3);background:rgba(210,153,34,0.05);">
+      <div class="ph-num" style="color:var(--phase4)">04</div>
+      <div class="ph-info">
+        <div class="ph-label" style="color:#e3b341">Fase 4 · Meses 9-12</div>
+        <div class="ph-title">Escala — Experiencia y automatización</div>
+        <div class="ph-desc">El sistema es estable, multi-país y monitoreable. Ahora se suman las funcionalidades que elevan la experiencia y reducen el trabajo manual del equipo.</div>
+      </div>
+      <div class="ph-time" style="background:rgba(210,153,34,0.15);color:#e3b341;border:1px solid rgba(210,153,34,0.3)">🚀 Futuro</div>
+    </div>
+
+    <div class="cards">
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">📧</div>
+          <div class="card-priority" style="background:rgba(14,159,142,0.15);color:#34d399">MEJORA</div>
+        </div>
+        <div class="card-title">Notificaciones automáticas por email / Teams <span class="chevron">▾</span></div>
+        <div class="card-desc">Hoy el operador tiene que estar mirando la pantalla para saber qué pasó. Las notificaciones permiten que el sistema avise automáticamente cuando hay algo para resolver.</div>
+        <div class="card-tags"><span class="tag">email</span><span class="tag">teams</span><span class="tag">automatización</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Eventos a notificar</div>
+            <div class="expand-item"><div class="expand-dot"></div>Nueva gestión creada → notifica al área de despacho</div>
+            <div class="expand-item"><div class="expand-dot"></div>Equipo despachado → notifica al usuario final</div>
+            <div class="expand-item"><div class="expand-dot"></div>Equipo pendiente de entrega hace más de 30 días → alerta al manager</div>
+            <div class="expand-item"><div class="expand-dot"></div>Resumen diario de gestiones pendientes por país</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">📱</div>
+          <div class="card-priority" style="background:rgba(14,159,142,0.15);color:#34d399">MEJORA</div>
+        </div>
+        <div class="card-title">API pública documentada <span class="chevron">▾</span></div>
+        <div class="card-desc">Exponer los endpoints de TeleCorp como una API REST documentada (Swagger/OpenAPI) permite que otros sistemas de Cencosud —RRHH, ERP, SAP— consuman datos sin intervención manual.</div>
+        <div class="card-tags"><span class="tag">api</span><span class="tag">swagger</span><span class="tag">integración</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Casos de integración posibles</div>
+            <div class="expand-item"><div class="expand-dot"></div>Sistema de RRHH envía bajas automáticamente → TeleCorp las procesa sin CSV manual</div>
+            <div class="expand-item"><div class="expand-dot"></div>SAP actualiza el Maestro de empleados automáticamente</div>
+            <div class="expand-item"><div class="expand-dot"></div>Power BI / Tableau consume datos para reportes ejecutivos</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">📊</div>
+          <div class="card-priority" style="background:rgba(14,159,142,0.15);color:#34d399">MEJORA</div>
+        </div>
+        <div class="card-title">Reportes exportables por gerencia <span class="chevron">▾</span></div>
+        <div class="card-desc">Hoy el único export es un CSV de líneas. Para gerencia regional se necesitan reportes ejecutivos en Excel y PDF con filtros por país, período y tipo de gestión.</div>
+        <div class="card-tags"><span class="tag">reportes</span><span class="tag">excel</span><span class="tag">pdf</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Reportes prioritarios</div>
+            <div class="expand-item"><div class="expand-dot"></div>Resumen mensual de gestiones por país y tipo</div>
+            <div class="expand-item"><div class="expand-dot"></div>Inventario de equipos (activos, stock, pendientes) por país</div>
+            <div class="expand-item"><div class="expand-dot"></div>Costo total de gestiones del período</div>
+            <div class="expand-item"><div class="expand-dot"></div>Ranking de equipos más gestionados por gama</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top">
+          <div class="card-icon">🔁</div>
+          <div class="card-priority" style="background:rgba(14,159,142,0.15);color:#34d399">MEJORA</div>
+        </div>
+        <div class="card-title">Alta disponibilidad (failover) <span class="chevron">▾</span></div>
+        <div class="card-desc">Para un sistema que opera en 5 países con diferentes husos horarios, hay que garantizar disponibilidad 24/7 con un mecanismo de failover automático si el servidor principal falla.</div>
+        <div class="card-tags"><span class="tag">ha</span><span class="tag">azure</span><span class="tag">sql server</span></div>
+        <div class="card-expand">
+          <div class="expand-section">
+            <div class="expand-label">Estrategia</div>
+            <div class="expand-item"><div class="expand-dot"></div>SQL Server Always On Availability Groups: base de datos con réplica automática</div>
+            <div class="expand-item"><div class="expand-dot"></div>Azure Load Balancer si se tienen múltiples instancias de la app</div>
+            <div class="expand-item"><div class="expand-dot"></div>RTO (Recovery Time Objective) objetivo: menos de 5 minutos de caída</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="phase-divider"></div>
+
+  <!-- EQUIPO -->
+  <div id="equipo" class="phase-block">
+    <div class="phase-header" style="border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);">
+      <div class="ph-num" style="color:var(--text3)">👥</div>
+      <div class="ph-info">
+        <div class="ph-label" style="color:var(--text3)">Recursos humanos</div>
+        <div class="ph-title">Equipo mínimo para sostener el sistema regional</div>
+        <div class="ph-desc">TeleCorp no puede seguir siendo responsabilidad de una sola persona. Para un sistema regional necesita un equipo mínimo con roles claros.</div>
+      </div>
+    </div>
+
+    <div class="cards">
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top"><div class="card-icon">💻</div><div class="card-priority" style="background:rgba(31,111,235,0.15);color:#58a6ff">ROL</div></div>
+        <div class="card-title">Desarrollador Python/Flask <span class="chevron">▾</span></div>
+        <div class="card-desc">Responsable del backend, la base de datos, los tests y el deploy. Puede ser el mismo desarrollador actual más soporte de IT Cencosud.</div>
+        <div class="card-expand">
+          <div class="expand-section"><div class="expand-label">Responsabilidades</div>
+            <div class="expand-item"><div class="expand-dot"></div>Mantenimiento de app.py y endpoints</div>
+            <div class="expand-item"><div class="expand-dot"></div>Migraciones de base de datos</div>
+            <div class="expand-item"><div class="expand-dot"></div>Resolución de bugs en producción</div>
+            <div class="expand-item"><div class="expand-dot"></div>CI/CD y deploy</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top"><div class="card-icon">🖥️</div><div class="card-priority" style="background:rgba(31,111,235,0.15);color:#58a6ff">ROL</div></div>
+        <div class="card-title">Infraestructura / IT Cencosud <span class="chevron">▾</span></div>
+        <div class="card-desc">Gestión del servidor, backup, HTTPS, red y dominio interno. En Cencosud ya existe este equipo — hay que involucrarlo formalmente en el proyecto.</div>
+        <div class="card-expand">
+          <div class="expand-section"><div class="expand-label">Responsabilidades</div>
+            <div class="expand-item"><div class="expand-dot"></div>Servidor dedicado en Azure o datacenter</div>
+            <div class="expand-item"><div class="expand-dot"></div>Certificado SSL corporativo</div>
+            <div class="expand-item"><div class="expand-dot"></div>Backup y política de retención</div>
+            <div class="expand-item"><div class="expand-dot"></div>Monitoreo de red y disponibilidad</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" onclick="toggle(this)">
+        <div class="card-top"><div class="card-icon">🌍</div><div class="card-priority" style="background:rgba(31,111,235,0.15);color:#58a6ff">ROL</div></div>
+        <div class="card-title">Referente por país (admin_pais) <span class="chevron">▾</span></div>
+        <div class="card-desc">Un referente operativo en cada país que conoce el negocio local, carga el Maestro mensual, gestiona usuarios de su país y reporta incidencias al equipo central.</div>
+        <div class="card-expand">
+          <div class="expand-section"><div class="expand-label">Responsabilidades</div>
+            <div class="expand-item"><div class="expand-dot"></div>Carga mensual del Maestro RRHH de su país</div>
+            <div class="expand-item"><div class="expand-dot"></div>Alta y baja de usuarios del sistema en su país</div>
+            <div class="expand-item"><div class="expand-dot"></div>Primer nivel de soporte para usuarios del país</div>
+            <div class="expand-item"><div class="expand-dot"></div>Validación de datos y reporte de inconsistencias</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+function toggle(card) {
+  card.classList.toggle('expanded');
+}
+
+function filterPhase(phase, btn) {
+  document.querySelectorAll('.phase-pill').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  const blocks = document.querySelectorAll('.phase-block[data-phase]');
+  blocks.forEach(b => {
+    if (phase === 'all' || b.dataset.phase === phase) {
+      b.classList.remove('hidden');
+    } else {
+      b.classList.add('hidden');
+    }
+  });
+}
+
+function scrollTo(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
